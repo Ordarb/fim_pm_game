@@ -61,6 +61,8 @@
   // Mit Namen exportiert -> Namen standardmässig anzeigen (lässt sich per Häkchen ausblenden)
   const state = Object.assign({ view: "overview", team: "", names: !!D.meta.with_names, selected: PEOPLE[0].id,
     sc: { dy: 0, dsAA: 0, dsA: 0, dsBBB: 0, h: 4 } }, state0());
+  // Markt-Zeitraum nicht über Sitzungen merken: beim Öffnen immer "Start bis heute"
+  state.mkFrom = null; state.mkTo = null;
   const save = () => { try { localStorage.setItem("fim-state", JSON.stringify(state)); } catch { /* egal */ } };
   const displayName = p => (D.meta.with_names && state.names && p.name) ? p.name : p.alias;
   const visible = () => PEOPLE.filter(p => !state.team || p.team === state.team);
