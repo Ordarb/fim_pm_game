@@ -464,9 +464,10 @@
     const bondRows = D.bonds.filter(b => PERF.bonds[b.isin]).map(b => {
       const B = PERF.bonds[b.isin];
       const ts = M.bond_spread_ts[b.isin] || [];
+      const rendite = B.r.slice(i0, i1).reduce((acc, x) => acc * (1 + x), 1) - 1;
+      const zins = sum(B.carry_d) + sum(B.zins_d);  // Zinsrendite inkl. Carry
       return { name: b.name, rating_num: b.rating_num, rating: b.rating, sektor: b.sektor, duration: b.duration,
-        rendite: B.r.slice(i0, i1).reduce((acc, x) => acc * (1 + x), 1) - 1,
-        zins: sum(B.carry_d) + sum(B.zins_d), kredit: sum(B.kredit_d),  // Zinsrendite inkl. Carry
+        rendite, zins, kredit: rendite - zins,  // Spreadrendite als Rest: Zins + Spread = Total
         dspread: ts[i0] != null && ts[i1] != null ? ts[i1] - ts[i0] : null, holders: holders(b.isin) };
     });
     const bcols = [{ key: "name", label: "Bond" }, { key: "rating_num", label: "Rating", num: true, fmt: (v, r) => r.rating },
