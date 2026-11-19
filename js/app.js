@@ -359,7 +359,9 @@
       ...teamsShown.map(t => ({ name: avgLabel(t), color: teamColor(t), values: avgSeries(t), width: 2.5, label: avgLabel(t) })),
       { name: "SBI", color: css("--text-primary"), values: PERF.sbi.cum, width: 2, label: "SBI" },
     ];
-    if (sel && perfOf(sel) && (!state.team || sel.team === state.team))
+    // Gewähltes Portfolio hervorheben - ausser es ist schon die Kohortenlinie (Kohorte mit nur 1 Portfolio, z.B. Dozent)
+    const selIsTeamLine = sel && PEOPLE.filter(p => p.team === sel.team).length === 1;
+    if (sel && perfOf(sel) && !selIsTeamLine && (!state.team || sel.team === state.team))
       series.push({ name: displayName(sel), color: css("--accent-2"), values: perfOf(sel).cum, width: 2.5, label: displayName(sel) });
     const lineBox = draw(chartBox(), box => Charts.lines(box, {
       x: PERF.dates, xFmt: dateFmt, series, yFmt: v => pct(v, 1), zeroLine: true, height: 360,
